@@ -1,0 +1,455 @@
+dordsor21
+dordsor21@gmail.com
+Attempting to build version: '1.8' use --rev <version> to override
+Found version
+{
+	"name": "1.8",
+	"description": "Backport of fixes from 1.8.3",
+	"information": "Last build of Spigot 1.8.0. To update please see http://www.spigotmc.org/",
+	"warning": "***** Please ensure your BuildTools is at least #35 *****",
+	"refs": {
+		"BuildData": "0630ea462a82fdbd93018de7d5ec5e9d3b3c732b",
+		"Bukkit": "1d2509b99fb10b3bd6f597e63805f85b49d5a055",
+		"CraftBukkit": "7019900e276b7c9f6e940debf8529094c7f4da0c",
+		"Spigot": "550ebace4b43adc73854d7d5976e1343eba6fb98"
+	}
+}
+
+Pulling updates for D:\dords\Documents\dordsentials\BuildData\.git
+Successfully fetched updates!
+Checked out: 0630ea462a82fdbd93018de7d5ec5e9d3b3c732b
+Pulling updates for D:\dords\Documents\dordsentials\Bukkit\.git
+Successfully fetched updates!
+Checked out: 1d2509b99fb10b3bd6f597e63805f85b49d5a055
+Pulling updates for D:\dords\Documents\dordsentials\CraftBukkit\.git
+Successfully fetched updates!
+Checked out: 7019900e276b7c9f6e940debf8529094c7f4da0c
+Pulling updates for D:\dords\Documents\dordsentials\Spigot\.git
+Successfully fetched updates!
+Checked out: 550ebace4b43adc73854d7d5976e1343eba6fb98
+Attempting to build Minecraft with details: VersionInfo(minecraftVersion=1.8, accessTransforms=bukkit-1.8.at, classMappings=bukkit-1.8-cl.csrg, memberMappings=bukkit-1.8-members.csrg, packageMappings=package.srg, minecraftHash=null, decompileCommand=null)
+Found good Minecraft hash (5b19d1a562a8a7c5f9a787ad96c8148b)
+Found good Minecraft hash (5b19d1a562a8a7c5f9a787ad96c8148b)
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:EssentialsX:jar:2.0.1
+[WARNING] 'dependencies.dependency.systemPath' for BOSEconomy:BOSEconomy:jar should not point at files within the project directory, ${project.basedir}/../lib/BOSEconomy.jar will be unresolvable by dependent projects @ net.ess3:EssentialsX:[unknown-version], D:\dords\Documents\dordsentials\Essentials\pom.xml, line 53, column 25
+[WARNING] 'dependencies.dependency.systemPath' for iConomy:iConomy5:jar should not point at files within the project directory, ${project.basedir}/../lib/iCo5.jar will be unresolvable by dependent projects @ net.ess3:EssentialsX:[unknown-version], D:\dords\Documents\dordsentials\Essentials\pom.xml, line 60, column 25
+[WARNING] 'dependencies.dependency.systemPath' for iConomy:iConomy6:jar should not point at files within the project directory, ${project.basedir}/../lib/iCo6.jar will be unresolvable by dependent projects @ net.ess3:EssentialsX:[unknown-version], D:\dords\Documents\dordsentials\Essentials\pom.xml, line 67, column 25
+[WARNING] 'dependencies.dependency.systemPath' for MultiCurrency:MultiCurrency:jar should not point at files within the project directory, ${project.basedir}/../lib/MultiCurrency.jar will be unresolvable by dependent projects @ net.ess3:EssentialsX:[unknown-version], D:\dords\Documents\dordsentials\Essentials\pom.xml, line 74, column 25
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:EssentialsXSpawn:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:NMSProvider:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:UpdatedMetaProvider:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:1_8_R1Provider:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:1_8_R2Provider:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:LegacyProvider:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:ReflectionProvider:jar:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ net.ess3:EssentialsXParent:2.0.1, D:\dords\Documents\dordsentials\pom.xml, line 99, column 37
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for net.ess3:EssentialsXParent:pom:2.0.1
+[WARNING] 'build.plugins.plugin[org.apache.maven.plugins:maven-antrun-plugin].dependencies.dependency.systemPath' for com.sun:tools:jar refers to a non-existing file C:\Program Files\Java\jre1.8.0_111\..\lib\tools.jar. Please verify that you run Maven using a JDK and not just a JRE. @ line 99, column 37
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] EssentialsXParent
+[INFO] NMSProvider
+[INFO] UpdatedMetaProvider
+[INFO] 1_8_R1Provider
+[INFO] 1_8_R2Provider
+[INFO] LegacyProvider
+[INFO] ReflectionProvider
+[INFO] EssentialsX
+[INFO] EssentialsXSpawn
+[WARNING] The POM for org.apache.maven.plugins:maven-antrun-plugin:jar:1.7 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-antrun-plugin:1.7: Plugin org.apache.maven.plugins:maven-antrun-plugin:1.7 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-antrun-plugin:jar:1.7
+[WARNING] The POM for org.apache.maven.plugins:maven-dependency-plugin:jar:2.8 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-dependency-plugin:2.8: Plugin org.apache.maven.plugins:maven-dependency-plugin:2.8 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-dependency-plugin:jar:2.8
+[WARNING] The POM for com.google.code.maven-replacer-plugin:replacer:jar:1.5.2 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for com.google.code.maven-replacer-plugin:replacer:1.5.2: Plugin com.google.code.maven-replacer-plugin:replacer:1.5.2 or one of its dependencies could not be resolved: Failed to read artifact descriptor for com.google.code.maven-replacer-plugin:replacer:jar:1.5.2
+[WARNING] The POM for org.apache.maven.plugins:maven-javadoc-plugin:jar:2.9.1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-javadoc-plugin:2.9.1: Plugin org.apache.maven.plugins:maven-javadoc-plugin:2.9.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-javadoc-plugin:jar:2.9.1
+[WARNING] The POM for org.apache.maven.plugins:maven-deploy-plugin:jar:2.8.1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-deploy-plugin:2.8.1: Plugin org.apache.maven.plugins:maven-deploy-plugin:2.8.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-deploy-plugin:jar:2.8.1
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building EssentialsXParent 2.0.1
+[INFO] ------------------------------------------------------------------------
+[WARNING] The POM for org.apache.maven.plugins:maven-antrun-plugin:jar:1.7 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-antrun-plugin:1.7: Plugin org.apache.maven.plugins:maven-antrun-plugin:1.7 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-antrun-plugin:jar:1.7
+[WARNING] The POM for org.apache.maven.plugins:maven-dependency-plugin:jar:2.8 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-dependency-plugin:2.8: Plugin org.apache.maven.plugins:maven-dependency-plugin:2.8 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-dependency-plugin:jar:2.8
+[WARNING] The POM for com.google.code.maven-replacer-plugin:replacer:jar:1.5.2 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for com.google.code.maven-replacer-plugin:replacer:1.5.2: Plugin com.google.code.maven-replacer-plugin:replacer:1.5.2 or one of its dependencies could not be resolved: Failed to read artifact descriptor for com.google.code.maven-replacer-plugin:replacer:jar:1.5.2
+[WARNING] The POM for org.apache.maven.plugins:maven-javadoc-plugin:jar:2.9.1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-javadoc-plugin:2.9.1: Plugin org.apache.maven.plugins:maven-javadoc-plugin:2.9.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-javadoc-plugin:jar:2.9.1
+[WARNING] The POM for org.apache.maven.plugins:maven-deploy-plugin:jar:2.8.1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Failed to retrieve plugin descriptor for org.apache.maven.plugins:maven-deploy-plugin:2.8.1: Plugin org.apache.maven.plugins:maven-deploy-plugin:2.8.1 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-deploy-plugin:jar:2.8.1
+[INFO] 
+[INFO] --- maven-install-plugin:2.4:install-file (default-cli) @ EssentialsXParent ---
+[INFO] Installing D:\dords\Documents\dordsentials\work\mapped.8eb82bde.jar to C:\Users\dords\.m2\repository\org\spigotmc\minecraft-server\1.8-SNAPSHOT\minecraft-server-1.8-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] EssentialsXParent .................................. SUCCESS [  0.218 s]
+[INFO] NMSProvider ........................................ SKIPPED
+[INFO] UpdatedMetaProvider ................................ SKIPPED
+[INFO] 1_8_R1Provider ..................................... SKIPPED
+[INFO] 1_8_R2Provider ..................................... SKIPPED
+[INFO] LegacyProvider ..................................... SKIPPED
+[INFO] ReflectionProvider ................................. SKIPPED
+[INFO] EssentialsX ........................................ SKIPPED
+[INFO] EssentialsXSpawn ................................... SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.441 s
+[INFO] Finished at: 2016-12-07T20:03:35+00:00
+[INFO] Final Memory: 8M/245M
+[INFO] ------------------------------------------------------------------------
+Applying CraftBukkit Patches
+Backing up NMS dir
+Patching with BiomeDecorator.patch
+Patching with BiomeTheEndDecorator.patch
+Patching with Block.patch
+Patching with BlockBloodStone.patch
+Patching with BlockButtonAbstract.patch
+Patching with BlockCactus.patch
+Patching with BlockCake.patch
+Patching with BlockCocoa.patch
+Patching with BlockCommand.patch
+Patching with BlockCrops.patch
+Patching with BlockDaylightDetector.patch
+Patching with BlockDiodeAbstract.patch
+Patching with BlockDispenser.patch
+Patching with BlockDoor.patch
+Patching with BlockDragonEgg.patch
+Patching with BlockDropper.patch
+Patching with BlockEnderPortal.patch
+Patching with BlockFire.patch
+Patching with BlockFlowing.patch
+Patching with BlockGrass.patch
+Patching with BlockIce.patch
+Patching with BlockLeaves.patch
+Patching with BlockLever.patch
+Patching with BlockMinecartDetector.patch
+Patching with BlockMobSpawner.patch
+Patching with BlockMonsterEggs.patch
+Patching with BlockMushroom.patch
+Patching with BlockMycel.patch
+Patching with BlockNetherWart.patch
+Patching with BlockOre.patch
+Patching with BlockPiston.patch
+Patching with BlockPlant.patch
+Patching with BlockPortal.patch
+Patching with BlockPoweredRail.patch
+Patching with BlockPressurePlateAbstract.patch
+Patching with BlockPressurePlateBinary.patch
+Patching with BlockPressurePlateWeighted.patch
+Patching with BlockPumpkin.patch
+Patching with BlockRedstoneLamp.patch
+Patching with BlockRedstoneOre.patch
+Patching with BlockRedstoneTorch.patch
+Patching with BlockRedstoneWire.patch
+Patching with BlockReed.patch
+Patching with BlockSapling.patch
+Patching with BlockSkull.patch
+Patching with BlockSnow.patch
+Patching with BlockSoil.patch
+Patching with BlockStationary.patch
+Patching with BlockStem.patch
+Patching with BlockTallPlant.patch
+Patching with BlockTrapdoor.patch
+Patching with BlockTripwire.patch
+Patching with BlockTripwireHook.patch
+Patching with BlockVine.patch
+Patching with ChatBaseComponent.patch
+Patching with ChatModifier.patch
+Patching with Chunk.patch
+Patching with ChunkProviderServer.patch
+Patching with ChunkRegionLoader.patch
+Patching with ChunkSection.patch
+Patching with CommandBlockListenerAbstract.patch
+Patching with CommandExecute.patch
+Patching with CommandGamemode.patch
+Patching with CommandGamerule.patch
+Patching with CommandTp.patch
+Patching with Container.patch
+Patching with ContainerAnvil.patch
+Patching with ContainerAnvilInventory.patch
+Patching with ContainerBeacon.patch
+Patching with ContainerBrewingStand.patch
+Patching with ContainerChest.patch
+Patching with ContainerDispenser.patch
+Patching with ContainerEnchantTable.patch
+Patching with ContainerEnchantTableInventory.patch
+Patching with ContainerFurnace.patch
+Patching with ContainerHopper.patch
+Patching with ContainerHorse.patch
+Patching with ContainerMerchant.patch
+Patching with ContainerPlayer.patch
+Patching with ContainerWorkbench.patch
+Patching with ControllerLook.patch
+Patching with ControllerMove.patch
+Patching with CraftingManager.patch
+Patching with CrashReport.patch
+Patching with DedicatedServer.patch
+Patching with DispenseBehaviorArmor.patch
+Patching with DispenseBehaviorBoat.patch
+Patching with DispenseBehaviorBonemeal.patch
+Patching with DispenseBehaviorCommandBlock.patch
+Patching with DispenseBehaviorEmptyBucket.patch
+Patching with DispenseBehaviorFilledBucket.patch
+Patching with DispenseBehaviorFireball.patch
+Patching with DispenseBehaviorFireworks.patch
+Patching with DispenseBehaviorFlintAndSteel.patch
+Patching with DispenseBehaviorItem.patch
+Patching with DispenseBehaviorMinecart.patch
+Patching with DispenseBehaviorMonsterEgg.patch
+Patching with DispenseBehaviorProjectile.patch
+Patching with DispenseBehaviorTNT.patch
+Patching with Enchantment.patch
+Patching with EnchantmentThorns.patch
+Patching with Entity.patch
+Patching with EntityAgeable.patch
+Patching with EntityAnimal.patch
+Patching with EntityArmorStand.patch
+Patching with EntityArrow.patch
+Patching with EntityBoat.patch
+Patching with EntityChicken.patch
+Patching with EntityCow.patch
+Patching with EntityCreature.patch
+Patching with EntityCreeper.patch
+Patching with EntityDamageSourceIndirect.patch
+Patching with EntityEgg.patch
+Patching with EntityEnderCrystal.patch
+Patching with EntityEnderDragon.patch
+Patching with EntityEnderman.patch
+Patching with EntityEnderPearl.patch
+Patching with EntityExperienceOrb.patch
+Patching with EntityFallingBlock.patch
+Patching with EntityFireball.patch
+Patching with EntityFishingHook.patch
+Patching with EntityGuardian.patch
+Patching with EntityHanging.patch
+Patching with EntityHorse.patch
+Patching with EntityHuman.patch
+Patching with EntityInsentient.patch
+Patching with EntityIronGolem.patch
+Patching with EntityItem.patch
+Patching with EntityItemFrame.patch
+Patching with EntityLargeFireball.patch
+Patching with EntityLeash.patch
+Patching with EntityLightning.patch
+Patching with EntityLiving.patch
+Patching with EntityMinecartAbstract.patch
+Patching with EntityMinecartCommandBlockListener.patch
+Patching with EntityMinecartContainer.patch
+Patching with EntityMonster.patch
+Patching with EntityMushroomCow.patch
+Patching with EntityOcelot.patch
+Patching with EntityPainting.patch
+Patching with EntityPig.patch
+Patching with EntityPlayer.patch
+Patching with EntityPotion.patch
+Patching with EntityProjectile.patch
+Patching with EntityRabbit.patch
+Patching with EntitySheep.patch
+Patching with EntitySkeleton.patch
+Patching with EntitySlice.patch
+Patching with EntitySliceInnerClass1.patch
+Patching with EntitySliceInnerClass2.patch
+Patching with EntitySlime.patch
+Patching with EntitySmallFireball.patch
+Patching with EntitySnowman.patch
+Patching with EntitySpider.patch
+Patching with EntitySquid.patch
+Patching with EntityThrownExpBottle.patch
+Patching with EntityTNTPrimed.patch
+Patching with EntityTrackerEntry.patch
+Patching with EntityVillager.patch
+Patching with EntityWither.patch
+Patching with EntityWitherSkull.patch
+Patching with EntityWolf.patch
+Patching with EntityZombie.patch
+Patching with ExpirableListEntry.patch
+Patching with Explosion.patch
+Patching with FoodMetaData.patch
+Patching with HandshakeListener.patch
+Patching with ICommand.patch
+Patching with IDataManager.patch
+Patching with IInventory.patch
+Patching with InventoryCrafting.patch
+Patching with InventoryCraftResult.patch
+Patching with InventoryEnderChest.patch
+Patching with InventoryHorseChest.patch
+Patching with InventoryLargeChest.patch
+Patching with InventoryMerchant.patch
+Patching with InventorySubcontainer.patch
+Patching with IRecipe.patch
+Patching with ItemBed.patch
+Patching with ItemBoat.patch
+Patching with ItemBow.patch
+Patching with ItemBucket.patch
+Patching with ItemDye.patch
+Patching with ItemFireball.patch
+Patching with ItemFishingRod.patch
+Patching with ItemFlintAndSteel.patch
+Patching with ItemHanging.patch
+Patching with ItemLeash.patch
+Patching with ItemMapEmpty.patch
+Patching with ItemMinecart.patch
+Patching with ItemMonsterEgg.patch
+Patching with ItemStack.patch
+Patching with ItemWaterLily.patch
+Patching with ItemWorldMap.patch
+Patching with JsonList.patch
+Patching with Location2D.patch
+Patching with LoginListener.patch
+Patching with MethodProfiler.patch
+Patching with MinecraftServer.patch
+Patching with MobEffectList.patch
+Patching with MobSpawnerAbstract.patch
+Patching with NameReferencingFileConverter.patch
+Patching with NBTTagList.patch
+Patching with NetworkManager.patch
+Patching with Packet.patch
+Patching with PacketDataSerializer.patch
+Patching with PacketPlayInBlockPlace.patch
+Patching with PacketPlayInCloseWindow.patch
+Patching with PacketStatusListener.patch
+Patching with Path.patch
+Patching with PathfinderGoalBreakDoor.patch
+Patching with PathfinderGoalBreed.patch
+Patching with PathfinderGoalDefendVillage.patch
+Patching with PathfinderGoalEatTile.patch
+Patching with PathfinderGoalEndermanPickupBlock.patch
+Patching with PathfinderGoalEndermanPlaceBlock.patch
+Patching with PathfinderGoalGhastAttackTarget.patch
+Patching with PathfinderGoalHurtByTarget.patch
+Patching with PathfinderGoalMakeLove.patch
+Patching with PathfinderGoalNearestAttackableTarget.patch
+Patching with PathfinderGoalNearestAttackableTargetInsentient.patch
+Patching with PathfinderGoalOwnerHurtByTarget.patch
+Patching with PathfinderGoalOwnerHurtTarget.patch
+Patching with PathfinderGoalPanic.patch
+Patching with PathfinderGoalSelector.patch
+Patching with PathfinderGoalSilverfishHideInBlock.patch
+Patching with PathfinderGoalSilverfishWakeOthers.patch
+Patching with PathfinderGoalSit.patch
+Patching with PathfinderGoalTame.patch
+Patching with PathfinderGoalTargetNearestPlayer.patch
+Patching with PlayerChunk.patch
+Patching with PlayerChunkMap.patch
+Patching with PlayerConnection.patch
+Patching with PlayerDatFileConverter.patch
+Patching with PlayerInteractManager.patch
+Patching with PlayerInventory.patch
+Patching with PlayerList.patch
+Patching with PlayerSelector.patch
+Patching with PortalCreator.patch
+Patching with PortalTravelAgent.patch
+Patching with PropertyManager.patch
+Patching with RecipeArmorDye.patch
+Patching with RecipeBookClone.patch
+Patching with RecipeFireworks.patch
+Patching with RecipeMapClone.patch
+Patching with RecipeRepair.patch
+Patching with RecipesBannerInnerClass1.patch
+Patching with RecipesBannerInnerClass2.patch
+Patching with RecipesFurnace.patch
+Patching with RegionFile.patch
+Patching with RemoteControlCommandListener.patch
+Patching with ScoreboardServer.patch
+Patching with SecondaryWorldServer.patch
+Patching with ShapeDetectorBlock.patch
+Patching with ShapedRecipes.patch
+Patching with ShapelessRecipes.patch
+Patching with Slot.patch
+Patching with SlotFurnaceResult.patch
+Patching with SpawnerCreature.patch
+Patching with StatisticManager.patch
+Patching with SwitchHelperLogVariant.patch
+Patching with ThreadCommandReader.patch
+Patching with ThreadPlayerLookupUUID.patch
+Patching with TileEntity.patch
+Patching with TileEntityBeacon.patch
+Patching with TileEntityBrewingStand.patch
+Patching with TileEntityChest.patch
+Patching with TileEntityCommandListener.patch
+Patching with TileEntityDispenser.patch
+Patching with TileEntityFurnace.patch
+Patching with TileEntityHopper.patch
+Patching with TileEntityNote.patch
+Patching with TileEntityPiston.patch
+Patching with TileEntityRecordPlayer.patch
+Patching with TileEntitySign.patch
+Patching with TileEntitySkull.patch
+Patching with Village.patch
+Patching with VillageSiege.patch
+Patching with World.patch
+Patching with WorldBorder.patch
+Patching with WorldBorderListener.patch
+Patching with WorldData.patch
+Patching with WorldGenGroundBush.patch
+Patching with WorldGenMegaTreeAbstract.patch
+Patching with WorldGenVillagePiece.patch
+Patching with WorldGenVillagePieces.patch
+Patching with WorldGenWitchHut.patch
+Patching with WorldManager.patch
+Patching with WorldMap.patch
+Patching with WorldMapHumanTracker.patch
+Patching with WorldNBTStorage.patch
+Patching with WorldServer.patch
+Compiling Bukkit
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.bukkit:bukkit:jar:1.8-R0.1-SNAPSHOT
+[WARNING] 'parent.relativePath' points at net.ess3:EssentialsXParent instead of org.sonatype.oss:oss-parent, please verify your project structure @ line 6, column 13
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Bukkit 1.8-R0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[WARNING] The POM for org.apache.maven.plugins:maven-surefire-plugin:jar:2.12.4 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.184 s
+[INFO] Finished at: 2016-12-07T20:03:38+00:00
+[INFO] Final Memory: 6M/245M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Plugin org.apache.maven.plugins:maven-surefire-plugin:2.12.4 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-surefire-plugin:jar:2.12.4: 1 problem was encountered while building the effective model
+[ERROR] [FATAL] Non-parseable POM C:\Users\dords\.m2\repository\org\apache\maven\plugins\maven-surefire-plugin\2.12.4\maven-surefire-plugin-2.12.4.pom: end tag name </body> must match start tag name <hr> from line 888 (position: START_TAG seen ...          08-Nov-2014 19:04                 207\r\n</pre><hr></body>... @888:18)  @ line 888, column 18
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginResolutionException
+Exception in thread "main" java.lang.RuntimeException: Error running command, return status !=0: [sh, D:\dords\Documents\dordsentials\apache-maven-3.2.5/bin/mvn, clean, install]
+	at org.spigotmc.builder.Builder.runProcess(Builder.java:552)
+	at org.spigotmc.builder.Builder.main(Builder.java:418)

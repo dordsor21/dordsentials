@@ -25,7 +25,7 @@
     <repositories>
         <repository>
             <id>ess-repo</id>
-            <url>http://repo.ess3.net/content/groups/public</url>
+            <url>https://ci.drtshock.net/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>bukkit-repo</id>
@@ -35,12 +35,7 @@
 
     <modules>
         <module>Essentials</module>
-        <module>EssentialsAntiBuild</module>
-        <module>EssentialsChat</module>
-        <module>EssentialsGeoIP</module>
-        <module>EssentialsProtect</module>
         <module>EssentialsSpawn</module>
-        <module>EssentialsXMPP</module>
         <module>nms/NMSProvider</module>
         <module>nms/UpdatedMetaProvider</module>
         <module>nms/1_8_R1Provider</module>
@@ -53,7 +48,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
+            <version>1.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -121,32 +116,7 @@
                         </artifactItem>
                         <artifactItem>
                             <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsXAntiBuild</artifactId>
-                            <version>${project.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsXChat</artifactId>
-                            <version>${project.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsXGeoIP</artifactId>
-                            <version>${project.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsXProtect</artifactId>
-                            <version>${project.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>${project.groupId}</groupId>
                             <artifactId>EssentialsXSpawn</artifactId>
-                            <version>${project.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsXXMPP</artifactId>
                             <version>${project.version}</version>
                         </artifactItem>
                     </artifactItems>
@@ -266,7 +236,7 @@
     </build>
 
     <properties>
-        <build.number>TeamCity</build.number>
+        <build.number>SNAPSHOT</build.number>
         <GMVer>GMBuildVer</GMVer>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
