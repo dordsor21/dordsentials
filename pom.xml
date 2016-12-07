@@ -111,12 +111,12 @@
                     <artifactItems>
                         <artifactItem>
                             <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsX</artifactId>
+                            <artifactId>Essentials</artifactId>
                             <version>${project.version}</version>
                         </artifactItem>
                         <artifactItem>
                             <groupId>${project.groupId}</groupId>
-                            <artifactId>EssentialsXSpawn</artifactId>
+                            <artifactId>EssentialsSpawn</artifactId>
                             <version>${project.version}</version>
                         </artifactItem>
                     </artifactItems>
