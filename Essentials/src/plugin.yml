@@ -2,7 +2,7 @@
 name: Essentials
 main: com.earth2me.essentials.Essentials
 # Note to developers: This next line cannot change, or the automatic versioning system will break.
-version: ${project.version}-b${BUILD_NUMBER}
+version: ${project.version}-b${build.number}
 website: http://tiny.cc/EssentialsCommands
 description: Provides an essential, core set of commands for Bukkit.
 softdepend: [Vault]
@@ -10,12 +10,16 @@ authors: [Zenexer, ementalo, Aelux, Brettflan, KimKandor, snowleo, ceulemans, Xe
 commands:
   afk:
     description: Marks you as away-from-keyboard.
-    usage: /<command> [player]
+    usage: /<command> [player/message...]
     aliases: [eafk,away,eaway]
   antioch:
     description: 'A little surprise for operators.'
     usage: /<command> [message]
     aliases: [eantioch,grenade,egrenade,tnt,etnt]
+  back:
+    description: Teleports you to your location prior to tp/spawn/warp.
+    usage: /<command>
+    aliases: [eback,return,ereturn]
   backup:
     description: Runs the backup if configured.
     usage: /<command>
@@ -247,14 +251,6 @@ commands:
     description: Views the Message Of The Day.
     usage: /<command> [chapter] [page]
     aliases: [emotd]
-  msg:
-    description: Sends a private message to the specified player.
-    usage: /<command> <to> <message>
-    aliases: [w,m,t,pm,emsg,epm,tell,etell,whisper,ewhisper]
-  msgtoggle:
-    description: Blocks receiving all private messages.
-    usage: /<command> [player] [on|off]
-    aliases: [emsgtoggle]
   mute:
     description: Mutes or unmutes a player.
     usage: /<command> <player> [datediff]
@@ -275,6 +271,10 @@ commands:
     description: Pays another player from your balance.
     usage: /<command> <player> <amount>
     aliases: [epay]
+  paytoggle:
+    description: Toggles whether you are accepting payments.
+    usage: /<command>
+    aliases: [epaytoggle, payoff, epayoff, payon, epayon]
   ping:
     description: Pong!
     usage: /<command>
@@ -299,10 +299,6 @@ commands:
     description: Adjust a player's weather
     usage: /<command> [list|reset|storm|sun|clear] [player|*]
     aliases: [playerweather,eplayerweather,epweather]
-  r:
-    description: Quickly reply to the last player to message you.
-    usage: /<command> <message>
-    aliases: [er,reply,ereply]
   realname:
     description: Displays the username of a user based on nick.
     usage: /<command> <nickname>

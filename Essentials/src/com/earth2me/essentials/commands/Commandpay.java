@@ -26,6 +26,10 @@ public class Commandpay extends EssentialsLoopCommand {
         if (args.length < 2) {
             throw new NotEnoughArgumentsException();
         }
+        
+        if (args[1].contains("-")) {
+            throw new Exception(tl("payMustBePositive"));
+        }
 
         String stringAmount = args[1].replaceAll("[^0-9\\.]", "");
 
@@ -44,6 +48,10 @@ public class Commandpay extends EssentialsLoopCommand {
     protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws ChargeException {
         User user = ess.getUser(sender.getPlayer());
         try {
+            if (!player.isAcceptingPay()) {
+                sender.sendMessage(tl("notAcceptingPay", player.getDisplayName()));
+                return;
+            }
             user.payUser(player, amount);
             Trade.log("Command", "Pay", "Player", user.getName(), new Trade(amount, ess), player.getName(), new Trade(amount, ess), user.getLocation(), ess);
         } catch (MaxMoneyException ex) {
@@ -53,6 +61,8 @@ public class Commandpay extends EssentialsLoopCommand {
             } catch (MaxMoneyException ignored) {
                 // this should never happen
             }
+        } catch (Exception e) {
+            sender.sendMessage(e.getMessage());
         }
     }
 }

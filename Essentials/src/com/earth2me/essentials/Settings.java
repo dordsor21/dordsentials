@@ -6,6 +6,8 @@ import com.earth2me.essentials.signs.Signs;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.FormatUtil;
+import com.earth2me.essentials.utils.NumberUtil;
+
 import net.ess3.api.IEssentials;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,12 +16,24 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.*;
+import java.util.Locale.Category;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.earth2me.essentials.I18n.tl;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import com.google.common.base.Preconditions;
 
 
 public class Settings implements net.ess3.api.ISettings {
@@ -532,6 +546,11 @@ public class Settings implements net.ess3.api.ISettings {
         customQuitMessage = _getCustomQuitMessage();
         isCustomQuitMessage = !customQuitMessage.equals("none");
         muteCommands = _getMuteCommands();
+        spawnOnJoinGroups = _getSpawnOnJoinGroups();
+        commandCooldowns = _getCommandCooldowns();
+        npcsInBalanceRanking = _isNpcsInBalanceRanking();
+        currencyFormat = _getCurrencyFormat();
+        unprotectedSigns = _getUnprotectedSign();
     }
 
     private List<Integer> itemSpawnBl = new ArrayList<Integer>();
@@ -1162,5 +1181,232 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isWorldTimePermissions() {
         return config.getBoolean("world-time-permissions", false);
+    }
+
+    @Override
+    public boolean isSpawnOnJoin() {
+        return !this.spawnOnJoinGroups.isEmpty();
+    }
+    
+    private List<String> spawnOnJoinGroups;
+
+    public List<String> _getSpawnOnJoinGroups() {
+        List<String> def = Collections.emptyList();
+        if (config.isSet("spawn-on-join")) {
+            if (config.isList("spawn-on-join")) {
+                return new ArrayList<>(config.getStringList("spawn-on-join"));
+            } else if (config.isBoolean("spawn-on-join")) { // List of [*] to make all groups go to spawn on join.
+                // This also maintains backwards compatibility with initial impl of single boolean value.
+                return config.getBoolean("spawn-on-join") ? Collections.singletonList("*") : def;
+            }
+            // Take whatever the value is, convert to string and add it to a list as a single value.
+            String val = config.get("spawn-on-join").toString();
+            return !val.isEmpty() ? Collections.singletonList(val) : def;
+        } else {
+            return def;
+        }
+    }
+
+    @Override
+    public List<String> getSpawnOnJoinGroups() {
+        return this.spawnOnJoinGroups;
+    }
+
+    @Override
+    public boolean isUserInSpawnOnJoinGroup(IUser user) {
+        for (String group : this.spawnOnJoinGroups) {
+            if (group.equals("*") || user.inGroup(group)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isTeleportToCenterLocation() {
+        return config.getBoolean("teleport-to-center", true);
+    }
+    
+    private Map<Pattern, Long> commandCooldowns;
+
+    private Map<Pattern, Long> _getCommandCooldowns() {
+        if (!config.isConfigurationSection("command-cooldowns")) {
+            return null;
+        }
+        ConfigurationSection section = config.getConfigurationSection("command-cooldowns");
+        Map<Pattern, Long> result = new LinkedHashMap<>();
+        for (String cmdEntry : section.getKeys(false)) {
+            Pattern pattern = null;
+
+            /* ================================
+             * >> Regex
+             * ================================ */
+            if (cmdEntry.startsWith("^")) {
+                try {
+                    pattern = Pattern.compile(cmdEntry.substring(1));
+                } catch (PatternSyntaxException e) {
+                    ess.getLogger().warning("Command cooldown error: " + e.getMessage());
+                }
+            } else {
+                // Escape above Regex
+                if (cmdEntry.startsWith("\\^")) {
+                    cmdEntry = cmdEntry.substring(1);
+                }
+                String cmd = cmdEntry
+                    .replaceAll("\\*", ".*"); // Wildcards are accepted as asterisk * as known universally.
+                pattern = Pattern.compile(cmd + "( .*)?"); // This matches arguments, if present, to "ignore" them from the feature.
+            }
+            
+            /* ================================
+             * >> Process cooldown value
+             * ================================ */
+            Object value = section.get(cmdEntry);
+            if (!(value instanceof Number) && value instanceof String) {
+                try {
+                    value = Double.parseDouble(value.toString());
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            if (!(value instanceof Number)) {
+                ess.getLogger().warning("Command cooldown error: '" + value + "' is not a valid cooldown");
+                continue;
+            }
+            double cooldown = ((Number) value).doubleValue();
+            if (cooldown < 1) {
+                ess.getLogger().warning("Command cooldown with very short " + cooldown + " cooldown.");
+            }
+
+            result.put(pattern, (long) cooldown * 1000); // convert to milliseconds
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isCommandCooldownsEnabled() {
+        return commandCooldowns != null;
+    }
+
+    @Override
+    public long getCommandCooldownMs(String label) {
+        Entry<Pattern, Long> result = getCommandCooldownEntry(label);
+        return result != null ? result.getValue() : -1; // return cooldown in milliseconds
+    }
+
+    @Override
+    public Entry<Pattern, Long> getCommandCooldownEntry(String label) {
+        if (isCommandCooldownsEnabled()) {
+            for (Entry<Pattern, Long> entry : this.commandCooldowns.entrySet()) {
+                // Check if label matches current pattern (command-cooldown in config)
+                if (entry.getKey().matcher(label).matches()) {
+                    return entry;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isCommandCooldownPersistent(String label) {
+        // TODO: enable per command cooldown specification for persistence.
+        return config.getBoolean("command-cooldown-persistence", true);
+    }
+
+    private boolean npcsInBalanceRanking = false;
+
+    private boolean _isNpcsInBalanceRanking() {
+        return config.getBoolean("npcs-in-balance-ranking", false);
+    }
+
+    @Override
+    public boolean isNpcsInBalanceRanking() {
+        return npcsInBalanceRanking;
+    }
+
+    private NumberFormat currencyFormat;
+
+    private NumberFormat _getCurrencyFormat() {
+        String currencyFormatString = config.getString("currency-format", "#,##0.00");
+
+        String symbolLocaleString = config.getString("currency-symbol-format-locale");
+        DecimalFormatSymbols decimalFormatSymbols;
+        if (symbolLocaleString != null) {
+            decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.forLanguageTag(symbolLocaleString));
+        } else {
+            // Fallback to the JVM's default locale
+            decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.US);
+        }
+
+        DecimalFormat currencyFormat = new DecimalFormat(currencyFormatString, decimalFormatSymbols);
+        currencyFormat.setRoundingMode(RoundingMode.FLOOR);
+
+        // Updates NumberUtil#PRETTY_FORMAT field so that all of Essentials
+        // can follow a single format.
+        try {
+            Field field = NumberUtil.class.getDeclaredField("PRETTY_FORMAT");
+            field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            field.set(null, currencyFormat);
+            modifiersField.setAccessible(false);
+            field.setAccessible(false);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            ess.getLogger().severe("Failed to apply custom currency format: " + e.getMessage());
+            if (isDebug()) {
+                e.printStackTrace();
+            }
+        }
+
+        return currencyFormat;
+    }
+
+    @Override
+    public NumberFormat getCurrencyFormat() {
+        return this.currencyFormat;
+    }
+
+    private List<EssentialsSign> unprotectedSigns = Collections.emptyList();
+
+    @Override
+    public List<EssentialsSign> getUnprotectedSignNames() {
+        return this.unprotectedSigns;
+    }
+
+    private List<EssentialsSign> _getUnprotectedSign() {
+        List<EssentialsSign> newSigns = new ArrayList<>();
+
+        for (String signName : config.getStringList("unprotected-sign-names")) {
+            signName = signName.trim().toUpperCase(Locale.ENGLISH);
+            if (signName.isEmpty()) {
+                continue;
+            }
+            try {
+                newSigns.add(Signs.valueOf(signName).getSign());
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, tl("unknownItemInList", signName, "unprotected-sign-names"));
+                continue;
+            }
+        }
+        return newSigns;
+    }
+
+    @Override
+    public boolean isPastebinCreateKit() {
+        return config.getBoolean("pastebin-createkit", true);
+    }
+
+    @Override
+    public boolean isAllowBulkBuySell() {
+        return config.getBoolean("allow-bulk-buy-sell", false);
+    }
+
+    @Override
+    public boolean isAddingPrefixInPlayerlist() {
+        return config.getBoolean("add-prefix-in-playerlist", false);
+    }
+
+    @Override
+    public boolean isAddingSuffixInPlayerlist() {
+        return config.getBoolean("add-suffix-in-playerlist", false);
     }
 }

@@ -4,6 +4,7 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.TextInput;
 import com.earth2me.essentials.textreader.TextPager;
+import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.LocationUtil;
 import net.ess3.api.IEssentials;
 import org.bukkit.GameMode;
@@ -26,11 +27,16 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -248,7 +254,9 @@ public class EssentialsPlayerListener implements Listener {
                 } else if (message == null) {
                     //NOOP
                 } else if (ess.getSettings().isCustomJoinMessage()) {
-                    String msg = ess.getSettings().getCustomJoinMessage().replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName()).replace("{UNIQUE}", String.valueOf(ess.getUserMap().getUniqueUsers()));
+                    String msg = ess.getSettings().getCustomJoinMessage()
+                        .replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName())
+                        .replace("{UNIQUE}", NumberFormat.getInstance().format(ess.getUserMap().getUniqueUsers()));
                     ess.getServer().broadcastMessage(msg);
                 } else if (ess.getSettings().allowSilentJoinQuit()) {
                     ess.getServer().broadcastMessage(message);
@@ -376,11 +384,18 @@ public class EssentialsPlayerListener implements Listener {
             LOGGER.info(tl("mutedUserSpeaks", player.getName()));
             return;
         }
+        
+        PluginCommand pluginCommand = ess.getServer().getPluginCommand(cmd);
+        
         if (ess.getSettings().getSocialSpyCommands().contains(cmd) || ess.getSettings().getSocialSpyCommands().contains("*")) {
-            if (!player.hasPermission("essentials.chat.spy.exempt")) {
-                for (User spyer : ess.getOnlineUsers()) {
-                    if (spyer.isSocialSpyEnabled() && !player.equals(spyer.getBase())) {
-                        spyer.sendMessage(player.getDisplayName() + " : " + event.getMessage());
+            if (pluginCommand == null
+                || (!pluginCommand.getName().equals("msg") && !pluginCommand.getName().equals("r"))) { // /msg and /r are handled in SimpleMessageRecipient
+                User user = ess.getUser(player);
+                if (!user.isAuthorized("essentials.chat.spy.exempt")) {
+                    for (User spyer : ess.getOnlineUsers()) {
+                        if (spyer.isSocialSpyEnabled() && !player.equals(spyer.getBase())) {
+                            spyer.sendMessage(tl("socialSpyPrefix") + player.getDisplayName() + ": " + event.getMessage());
+                        }
                     }
                 }
             }
@@ -389,7 +404,6 @@ public class EssentialsPlayerListener implements Listener {
         boolean broadcast = true; // whether to broadcast the updated activity
         boolean update = true; // Only modified when the command is afk
 
-        PluginCommand pluginCommand = ess.getServer().getPluginCommand(cmd);
         if (pluginCommand != null) {
             // Switch case for commands that shouldn't broadcast afk activity.
             switch (pluginCommand.getName()) {
@@ -399,16 +413,61 @@ public class EssentialsPlayerListener implements Listener {
                     broadcast = false;
             }
         }
+        final User user = ess.getUser(player);
         if (update) {
-            final User user = ess.getUser(player);
             user.updateActivity(broadcast);
+        }
+
+        if (ess.getSettings().isCommandCooldownsEnabled() && pluginCommand != null
+            && !user.isAuthorized("essentials.commandcooldowns.bypass")) {
+            int argStartIndex = event.getMessage().indexOf(" ");
+            String args = argStartIndex == -1 ? "" // No arguments present 
+                : " " + event.getMessage().substring(argStartIndex); // arguments start at argStartIndex; substring from there.
+            String fullCommand = pluginCommand.getName() + args;
+
+            // Used to determine whether a user already has an existing cooldown
+            // If so, no need to check for (and write) new ones.
+            boolean cooldownFound = false;
+            
+            // Iterate over a copy of getCommandCooldowns in case of concurrent modifications
+            for (Entry<Pattern, Long> entry : new HashMap<>(user.getCommandCooldowns()).entrySet()) {
+                // Remove any expired cooldowns
+                if (entry.getValue() <= System.currentTimeMillis()) {
+                    user.clearCommandCooldown(entry.getKey());
+                    // Don't break in case there are other command cooldowns left to clear.
+                } else if (entry.getKey().matcher(fullCommand).matches()) {
+                    // User's current cooldown hasn't expired, inform and terminate cooldown code.
+                    if (entry.getValue() > System.currentTimeMillis()) {
+                        String commandCooldownTime = DateUtil.formatDateDiff(entry.getValue());
+                        user.sendMessage(tl("commandCooldown", commandCooldownTime));
+                        cooldownFound = true;
+                        event.setCancelled(true);
+                        break;
+                    }
+                }
+            }
+
+            if (!cooldownFound) {
+                Entry<Pattern, Long> cooldownEntry = ess.getSettings().getCommandCooldownEntry(fullCommand);
+
+                if (cooldownEntry != null) {
+                    if (ess.getSettings().isDebug()) {
+                        ess.getLogger().info("Applying " + cooldownEntry.getValue() + "ms cooldown on /" + fullCommand + " for" + user.getName() + ".");
+                    }
+                    Date expiry = new Date(System.currentTimeMillis() + cooldownEntry.getValue());
+                    user.addCommandCooldown(cooldownEntry.getKey(), expiry, ess.getSettings().isCommandCooldownPersistent(fullCommand));
+                }
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChangedWorldFlyReset(final PlayerChangedWorldEvent event) {
         final User user = ess.getUser(event.getPlayer());
-        if (user.getBase().getGameMode() != GameMode.CREATIVE && !user.isAuthorized("essentials.fly")) {
+        if (user.getBase().getGameMode() != GameMode.CREATIVE
+                // COMPAT: String compare for 1.7.10
+            && !user.getBase().getGameMode().name().equals("SPECTATOR")
+            && !user.isAuthorized("essentials.fly")) {
             user.getBase().setFallDistance(0f);
             user.getBase().setAllowFlight(false);
         }
@@ -437,6 +496,8 @@ public class EssentialsPlayerListener implements Listener {
         user.setDisplayNick();
         updateCompass(user);
         if (ess.getSettings().getNoGodWorlds().contains(newWorld) && user.isGodModeEnabledRaw()) {
+            // Player god mode is never disabled in order to retain it when changing worlds once more.
+            // With that said, players will still take damage as per the result of User#isGodModeEnabled()
             user.sendMessage(tl("noGodWorldWarning"));
         }
 

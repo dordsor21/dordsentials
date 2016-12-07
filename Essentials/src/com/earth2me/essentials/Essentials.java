@@ -143,7 +143,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         
         LOGGER.log(Level.INFO, tl("usingTempFolderForTesting"));
         LOGGER.log(Level.INFO, dataFolder.toString());
-        this.initialize(null, server, new PluginDescriptionFile(new FileReader(new File("src" + File.separator + "plugin.yml"))), dataFolder, null, null);
         settings = new Settings(this);
         userMap = new UserMap(this);
         permissionsHandler = new PermissionsHandler(this, false);
@@ -194,7 +193,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 execTimer.mark("Init(Usermap)");
                 upgrade.afterSettings();
                 execTimer.mark("Upgrade2");
-                i18n.updateLocale(settings.getLocale());
                 warps = new Warps(getServer(), this.getDataFolder());
                 confList.add(warps);
                 execTimer.mark("Init(Spawn/Warp)");
@@ -283,9 +281,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             LOGGER.log(Level.INFO, "Registering Listeners");
         }
 
-        final EssentialsPluginListener serverListener = new EssentialsPluginListener(this);
-        pm.registerEvents(serverListener, this);
-        confList.add(serverListener);
+        final EssentialsPluginListener pluginListener = new EssentialsPluginListener(this);
+        pm.registerEvents(pluginListener, this);
+        confList.add(pluginListener);
 
         final EssentialsPlayerListener playerListener = new EssentialsPlayerListener(this);
         pm.registerEvents(playerListener, this);
@@ -307,6 +305,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
         final EssentialsWorldListener worldListener = new EssentialsWorldListener(this);
         pm.registerEvents(worldListener, this);
+
+        final EssentialsServerListener serverListener = new EssentialsServerListener(this);
+        pm.registerEvents(serverListener, this);
 
         pm.registerEvents(tntListener, this);
 

@@ -7,9 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 
 public interface IUser {
@@ -40,6 +42,13 @@ public interface IUser {
     void setLogoutLocation();
 
     void requestTeleport(final User player, final boolean here);
+
+    /**
+     * Returns whether this user has an outstanding teleport request to deal with.
+     *
+     * @return whether there is a teleport request
+     */
+    boolean hasOutstandingTeleportRequest();
 
     ITeleport getTeleport();
 
@@ -138,6 +147,14 @@ public interface IUser {
     Map<String, Object> getConfigMap();
 
     Map<String, Object> getConfigMap(String node);
+    
+    Map<Pattern, Long> getCommandCooldowns();
+
+    Date getCommandCooldownExpiry(String label);
+    
+    void addCommandCooldown(Pattern pattern, Date expiresAt, boolean save);
+    
+    boolean clearCommandCooldown(Pattern pattern);
 
     /*
      *  PlayerExtension
@@ -147,4 +164,14 @@ public interface IUser {
     CommandSource getSource();
 
     String getName();
+
+    String getAfkMessage();
+
+    void setAfkMessage(final String message);
+    
+    long getAfkSince();
+    
+    boolean isAcceptingPay();
+    
+    void setAcceptingPay(boolean acceptingPay);
 }

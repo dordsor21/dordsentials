@@ -35,6 +35,13 @@ public class SimpleMessageRecipient implements IMessageRecipient {
     
     private long lastMessageMs;
     private WeakReference<IMessageRecipient> replyRecipient;
+
+    protected static User getUser(IMessageRecipient recipient) {
+        if (recipient instanceof SimpleMessageRecipient) {
+            return ((SimpleMessageRecipient) recipient).parent instanceof User ? (User) ((SimpleMessageRecipient) recipient).parent : null;
+        }
+        return recipient instanceof User ? (User) recipient : null;
+    }
     
     public SimpleMessageRecipient(IEssentials ess, IMessageRecipient parent) {
         this.ess = ess;
@@ -68,9 +75,31 @@ public class SimpleMessageRecipient implements IMessageRecipient {
                 break;
             // When this recipient is AFK, notify the sender. Then, proceed to send the message.
             case SUCCESS_BUT_AFK:
-                sendMessage(tl("userAFK", recipient.getDisplayName()));
+                // Currently, only IUser can be afk, so we unsafely cast to get the afk message.
+                if (((IUser) recipient).getAfkMessage() != null) {
+                    sendMessage(tl("userAFKWithMessage", recipient.getDisplayName(), ((IUser) recipient).getAfkMessage()));
+                } else {
+                    sendMessage(tl("userAFK", recipient.getDisplayName()));
+                }
             default:
                 sendMessage(tl("msgFormat", tl("me"), recipient.getDisplayName(), message));
+
+                // Better Social Spy
+                User senderUser = getUser(this);
+                User recipientUser = getUser(recipient);
+                if (senderUser != null // not null if player.
+                    // Dont spy on chats involving socialspy exempt players
+                    && !senderUser.isAuthorized("essentials.chat.spy.exempt")
+                    && (recipientUser != null && !recipientUser.isAuthorized("essentials.chat.spy.exempt"))) {
+                    for (User onlineUser : ess.getOnlineUsers()) {
+                        if (onlineUser.isSocialSpyEnabled()
+                            // Don't send socialspy messages to message sender/receiver to prevent spam
+                            && !onlineUser.equals(senderUser)
+                            && !onlineUser.equals(recipient)) {  
+                            onlineUser.sendMessage(tl("socialSpyPrefix") + tl("msgFormat", getDisplayName(), recipient.getDisplayName(), message));
+                        }
+                    }
+                }
         }
         // If the message was a success, set this sender's reply-recipient to the current recipient.
         if (messageResponse.isSuccess()) {
@@ -85,7 +114,7 @@ public class SimpleMessageRecipient implements IMessageRecipient {
             return MessageResponse.UNREACHABLE;
         }
         
-        User user = this.parent instanceof User ? (User) this.parent : null;
+        User user = getUser(this);
         boolean afk = false;
         if (user != null) {
             if (user.isIgnoreMsg()

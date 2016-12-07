@@ -12,11 +12,16 @@ import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
 import net.ess3.api.events.AfkStatusChangeEvent;
 import net.ess3.api.events.JailStatusChangeEvent;
+import net.ess3.api.events.MuteStatusChangeEvent;
 import net.ess3.api.events.UserBalanceUpdateEvent;
+import net.ess3.nms.refl.ReflUtil;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -50,6 +55,8 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private boolean enderSee = false;
     private transient long teleportInvulnerabilityTimestamp = 0;
     private boolean ignoreMsg = false;
+    private String afkMessage;
+    private long afkSince;
 
     public User(final Player base, final IEssentials ess) {
         super(base, ess);
@@ -140,10 +147,11 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     @Override
-    public void payUser(final User reciever, final BigDecimal value) throws ChargeException, MaxMoneyException {
-        if (value.signum() == 0) {
-            return;
+    public void payUser(final User reciever, final BigDecimal value) throws Exception {
+        if (value.compareTo(BigDecimal.ZERO) < 1) {
+            throw new Exception(tl("payMustBePositive"));
         }
+
         if (canAfford(value)) {
             setMoney(getMoney().subtract(value));
             reciever.setMoney(reciever.getMoney().add(value));
@@ -234,6 +242,24 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         }
     }
 
+    @Override
+    public boolean hasOutstandingTeleportRequest() {
+        if (getTeleportRequest() != null) { // Player has outstanding teleport request.
+            long timeout = ess.getSettings().getTpaAcceptCancellation();
+            if (timeout != 0) {
+                if ((System.currentTimeMillis() - getTeleportRequestTime()) / 1000 <= timeout) { // Player has outstanding request
+                    return true;
+                } else { // outstanding request expired.
+                    requestTeleport(null, false);
+                    return false;
+                }
+            } else { // outstanding request does not expire
+                return true;
+            }
+        }
+        return false;
+    }
+
     public UUID getTeleportRequest() {
         return teleportRequester;
     }
@@ -247,6 +273,10 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     public String getNick(final boolean longnick) {
+        return getNick(longnick, true, true);
+    }
+
+    public String getNick(final boolean longnick, final boolean withPrefix, final boolean withSuffix) {
         final StringBuilder prefix = new StringBuilder();
         String nickname;
         String suffix = "";
@@ -256,7 +286,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         } else if (nick.equalsIgnoreCase(getName())) {
             nickname = nick;
         } else {
-            nickname = ess.getSettings().getNicknamePrefix() + nick;
+            nickname = FormatUtil.replaceFormat(ess.getSettings().getNicknamePrefix()) + nick;
             suffix = "§r";
         }
 
@@ -273,12 +303,12 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
         if (ess.getSettings().addPrefixSuffix()) {
             //These two extra toggles are not documented, because they are mostly redundant #EasterEgg
-            if (!ess.getSettings().disablePrefix()) {
+            if (withPrefix || !ess.getSettings().disablePrefix()) {
                 final String ptext = ess.getPermissionsHandler().getPrefix(base).replace('&', '§');
                 prefix.insert(0, ptext);
                 suffix = "§r";
             }
-            if (!ess.getSettings().disableSuffix()) {
+            if (withSuffix || !ess.getSettings().disableSuffix()) {
                 final String stext = ess.getPermissionsHandler().getSuffix(base).replace('&', '§');
                 suffix = stext + "§r";
                 suffix = suffix.replace("§f§f", "§f").replace("§f§r", "§r").replace("§r§r", "§r");
@@ -304,8 +334,13 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     public void setDisplayNick() {
         if (base.isOnline() && ess.getSettings().changeDisplayName()) {
             this.getBase().setDisplayName(getNick(true));
-            if (ess.getSettings().changePlayerListName()) {
-                String name = getNick(false);
+            if (isAfk()) {
+                updateAfkListName();
+            } else if (ess.getSettings().changePlayerListName()) {
+                // 1.8 enabled player list-names longer than 16 characters.
+                // If the server is on 1.8 or higher, provide that functionality. Otherwise, keep prior functionality.
+                boolean higherOrEqualTo1_8 = ReflUtil.getNmsVersionObject().isHigherThanOrEqualTo(ReflUtil.V1_8_R1);
+                String name = getNick(higherOrEqualTo1_8, ess.getSettings().isAddingPrefixInPlayerlist(), ess.getSettings().isAddingSuffixInPlayerlist());
                 try {
                     this.getBase().setPlayerListName(name);
                 } catch (IllegalArgumentException e) {
@@ -375,6 +410,11 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             return;
         }
         final BigDecimal oldBalance = _getMoney();
+        
+        UserBalanceUpdateEvent updateEvent = new UserBalanceUpdateEvent(this.getBase(), oldBalance, value);
+        ess.getServer().getPluginManager().callEvent(updateEvent);
+        BigDecimal newBalance = updateEvent.getNewBalance();
+        
         if (Methods.hasMethod()) {
             try {
                 final Method method = Methods.getMethod();
@@ -382,13 +422,12 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
                     throw new Exception();
                 }
                 final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
-                account.set(value.doubleValue());
+                account.set(newBalance.doubleValue());
             } catch (Exception ex) {
             }
         }
-        super.setMoney(value, true);
-        ess.getServer().getPluginManager().callEvent(new UserBalanceUpdateEvent(this.getBase(), oldBalance, value));
-        Trade.log("Update", "Set", "API", getName(), new Trade(value, ess), null, null, null, ess);
+        super.setMoney(newBalance, true);
+        Trade.log("Update", "Set", "API", getName(), new Trade(newBalance, ess), null, null, null, ess);
     }
 
     public void updateMoneyCache(final BigDecimal value) {
@@ -415,18 +454,25 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         this.getBase().setSleepingIgnored(this.isAuthorized("essentials.sleepingignored") ? true : set);
         if (set && !isAfk()) {
             afkPosition = this.getLocation();
+            this.afkSince = System.currentTimeMillis();
         } else if (!set && isAfk()) {
             afkPosition = null;
+            this.afkMessage = null;
+            this.afkSince = 0;
         }
+        _setAfk(set);
+        updateAfkListName();
+    }
+    
+    private void updateAfkListName() {
         if (ess.getSettings().isAfkListName()) {
-            if(set) {
+            if(isAfk()) {
                 String afkName = ess.getSettings().getAfkListName().replace("{PLAYER}", getDisplayName()).replace("{USERNAME}", getName());
                 getBase().setPlayerListName(afkName);
             } else {
                 getBase().setPlayerListName(null);
             }
         }
-        _setAfk(set);
     }
 
     public boolean toggleAfk() {
@@ -479,10 +525,15 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     //Returns true if status expired during this check
     public boolean checkMuteTimeout(final long currentTime) {
         if (getMuteTimeout() > 0 && getMuteTimeout() < currentTime && isMuted()) {
-            setMuteTimeout(0);
-            sendMessage(tl("canTalkAgain"));
-            setMuted(false);
-            return true;
+            final MuteStatusChangeEvent event = new MuteStatusChangeEvent(this, null, false);
+            ess.getServer().getPluginManager().callEvent(event);
+            
+            if (!event.isCancelled()) {
+                setMuteTimeout(0);
+                sendMessage(tl("canTalkAgain"));
+                setMuted(false);
+                return true;
+            }
         }
         return false;
     }
@@ -508,7 +559,10 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
         }
 
         final long autoafkkick = ess.getSettings().getAutoAfkKick();
-        if (autoafkkick > 0 && lastActivity > 0 && (lastActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && !isHidden() && !isAuthorized("essentials.kick.exempt") && !isAuthorized("essentials.afk.kickexempt")) {
+        if (autoafkkick > 0
+            && lastActivity > 0 && (lastActivity + (autoafkkick * 1000)) < System.currentTimeMillis()
+            && !isAuthorized("essentials.kick.exempt")
+            && !isAuthorized("essentials.afk.kickexempt")) {
             final String kickReason = tl("autoAfkKickReason", autoafkkick / 60.0);
             lastActivity = 0;
             this.getBase().kickPlayer(kickReason);
@@ -539,7 +593,21 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public boolean isGodModeEnabled() {
-        return (super.isGodModeEnabled() && !ess.getSettings().getNoGodWorlds().contains(this.getLocation().getWorld().getName())) || (isAfk() && ess.getSettings().getFreezeAfkPlayers());
+        if (super.isGodModeEnabled()) {
+            // This enables the no-god-in-worlds functionality where the actual player god mode state is never modified in disabled worlds,
+            // but this method gets called every time the player takes damage. In the case that the world has god-mode disabled then this method
+            // will return false and the player will take damage, even though they are in god mode (isGodModeEnabledRaw()).
+            if (!ess.getSettings().getNoGodWorlds().contains(this.getLocation().getWorld().getName())) {
+                return true;
+            }
+        }
+        if (isAfk()) {
+            // Protect AFK players by representing them in a god mode state to render them invulnerable to damage.
+            if (ess.getSettings().getFreezeAfkPlayers()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isGodModeEnabledRaw() {
@@ -749,5 +817,34 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override public void setReplyRecipient(IMessageRecipient recipient) {
         this.messageRecipient.setReplyRecipient(recipient);
+    }
+
+    @Override
+    public String getAfkMessage() {
+        return this.afkMessage;
+    }
+
+    @Override
+    public void setAfkMessage(String message) {
+        if (isAfk()) {
+            this.afkMessage = message;
+        }
+    }
+
+    @Override
+    public long getAfkSince() {
+        return afkSince;
+    }
+
+    /**
+     * Returns the {@link ItemStack} in the main hand or off-hand. If the main hand is empty then the offhand item is returned - also nullable.
+     */
+    public ItemStack getItemInHand() {
+        if (ReflUtil.getNmsVersionObject().isLowerThan(ReflUtil.V1_9_R1)) {
+            return getBase().getInventory().getItemInHand();
+        } else {
+            PlayerInventory inventory = getBase().getInventory();
+            return inventory.getItemInMainHand() != null ? inventory.getItemInMainHand() : inventory.getItemInOffHand();
+        }
     }
 }

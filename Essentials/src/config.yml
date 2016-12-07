@@ -45,6 +45,16 @@ change-displayname: true
 # Do not edit this setting unless you know what you are doing!
 #add-prefix-suffix: false
 
+# When this option is enabled, player prefixes will be shown in the playerlist.
+# This feature only works for Minecraft version 1.8 and higher.
+# This value of change-playerlist has to be true
+#add-prefix-in-playerlist: true
+
+# When this option is enabled, player suffixes will be shown in the playerlist.
+# This feature only works for Minecraft version 1.8 and higher. 
+# This value of change-playerlist has to be true
+#add-suffix-in-playerlist: true
+
 # If the teleport destination is unsafe, should players be teleported to the nearest safe location?
 # If this is set to true, Essentials will attempt to teleport players close to the intended destination.
 # If this is set to false, attempted teleports to unsafe locations will be cancelled with a warning.
@@ -63,6 +73,9 @@ teleport-delay: 0
 # The delay, in seconds, a player can't be attacked by other players after they have been teleported by a command.
 # This will also prevent the player attacking other players.
 teleport-invulnerability: 4
+
+# Whether to make all teleportations go to the center of the block; where the x and z coordinates decimal become .5
+teleport-to-center: true
 
 # The delay, in seconds, required between /heal or /feed attempts.
 heal-cooldown: 60
@@ -322,6 +335,15 @@ enabledSigns:
 # Lower numbers will reduce the possibility of lag, but may annoy players.
 sign-use-per-second: 4
 
+# List of sign names Essentials should not protect. This feature is especially useful when
+# another plugin provides a sign that EssentialsX provides, but Essentials overrides.
+# For example, if a plugin provides a [kit] sign, and you wish to use theirs instead of
+# Essentials's, then simply add kit below and Essentials will not protect it.
+#
+# See https://github.com/drtshock/Essentials/pull/699 for more information.
+unprotected-sign-names:
+  #- kit
+
 # Backup runs a batch/bash command while saving is disabled.
 backup:
   # Interval in minutes.
@@ -481,6 +503,39 @@ send-fly-enable-on-join: true
 # Give someone permission to teleport to a world with essentials.time.world.<worldname>.
 world-time-permissions: false
 
+# Specify cooldown for both Essentials commands and external commands as well.
+# All commands do not start with a Forward Slash (/). Instead of /msg, write msg
+#
+# Wildcards are supported. E.g.
+# - '*i*': 50
+# adds a 50 second cooldown to all commands that include the letter i
+#
+# EssentialsX supports regex by starting the command with a caret ^
+# For example, to target commands starting with ban and not banip the following would be used:
+#  '^ban([^ip])( .*)?': 60 # 60 seconds /ban cooldown.
+# Note: If you have a command that starts with ^, then you can escape it using backslash (\). e.g. \^command: 123
+command-cooldowns:
+#  feed: 100 # 100 second cooldown on /feed command
+#  '*': 5 # 5 Second cooldown on all commands
+
+# Whether command cooldowns should be persistent past server shutdowns
+command-cooldown-persistence: true
+
+# Whether NPC balances should be listed in balance ranking features such as /balancetop.
+# NPC balances can include features like factions from FactionsUUID plugin.
+npcs-in-balance-ranking: false
+
+# Determines the functionality of the /createkit command.
+# If this is true, /createkit will give the user a link with the kit code.
+# If this is false, /createkit will add the kit to this config file directly.
+#
+# WARNING: If this is false, the config comments WILL be removed and it won't look the same as it does now.
+pastebin-createkit: true
+
+# Allow bulk buying and selling signs when the player is sneaking.
+# This is useful when a sign sells or buys one item at a time and the player wants to sell a bunch at once.
+allow-bulk-buy-sell: true
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                   EssentialsHome                     | #
@@ -559,6 +614,19 @@ use-bukkit-permissions: false
 
 # Minimum acceptable amount to be used in /pay.
 minimum-pay-amount: 0.001
+
+# The format of currency, excluding symbols. See currency-sumbol-format-locale for symbol configuration.
+#
+# "#,##0.00" is how the majority of countries display currency.
+#currency-format: "#,##0.00"
+
+# Format currency symbols. Some locales use , and . interchangeably.
+# Some formats do not display properly in-game due to faulty Minecraft font rendering.
+#
+# For 1.234,50 use de-DE
+# For 1,234.50 use en-US
+# For 1'234,50 use fr-ch
+#currency-symbol-format-locale: en-US
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -800,5 +868,14 @@ respawn-listener-priority: high
 
 # When users die, should they respawn at their first home or bed, instead of the spawnpoint?
 respawn-at-home: false
+
+# Teleport all joining players to the spawnpoint
+spawn-on-join: false
+# The following value of `guests` states that all players in group `guests` will be teleported to spawn when joining.
+#spawn-on-join: guests
+# The following list value states that all players in group `guests` and `admin` are to be teleported to spawn when joining. 
+#spawn-on-join:
+#- guests
+#- admin
 
 # End of file <-- No seriously, you're done with configuration.
