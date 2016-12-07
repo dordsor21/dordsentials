@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 
 
-public class FakeWorld implements World {
+public abstract class FakeWorld implements World {
     private final String name;
     private final Environment env;
 
