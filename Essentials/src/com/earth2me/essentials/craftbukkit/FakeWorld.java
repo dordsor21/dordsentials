@@ -334,6 +334,11 @@ public class FakeWorld implements World {
     }
 
     @Override
+    public <T extends Entity> T spawn(Location lctn, Class<T> type) throws IllegalArgumentException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public FallingBlock spawnFallingBlock(Location location, MaterialData materialData) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
