@@ -28,14 +28,6 @@ commands:
     description: Gets the top balance values.
     usage: /<command> <page>
     aliases: [ebalancetop,baltop,ebaltop]
-  ban:
-    description: Bans a player.
-    usage: /<command> <player> [reason]
-    aliases: [eban]
-  banip:
-    description: Bans an IP address.
-    usage: /<command> <address>
-    aliases: [ebanip]
   book:
     description: Allows reopening and editing of sealed books.
     usage: /<command> [title|author [name]]
@@ -199,10 +191,6 @@ commands:
     description: List all jails.
     usage: /<command>
     aliases: [ejails]
-  jump:
-    description: Jumps to the nearest block in the line of sight.
-    usage: /<command>
-    aliases: [j,ej,ejump,jumpto,ejumpto]
   kick:
     description: Kicks a specified player with a reason.
     usage: /<command> <player> [reason]
@@ -371,10 +359,6 @@ commands:
     description: Causes you to perish.
     usage: /<command>
     aliases: [esuicide]
-  tempban:
-    description: Temporary ban a user.
-    usage: /<command> <playername> <datediff> <reason>
-    aliases: [etempban]
   thunder:
     description: Enable/disable thunder.
     usage: /<command> <true/false> [duration]
@@ -399,14 +383,6 @@ commands:
     description: Spawn a tree where you are looking.
     usage: /<command> <tree|birch|redwood|redmushroom|brownmushroom|jungle|junglebush|swamp>
     aliases: [etree]
-  unban:
-    description: Unbans the specified player.
-    usage: /<command> <player>
-    aliases: [pardon,eunban,epardon]
-  unbanip:
-    description: Unbans the specified IP address.
-    usage: /<command> <address>
-    aliases: [eunbanip,pardonip,epardonip]
   unlimited:
     description: Allows the unlimited placing of items.
     usage: /<command> <list|item|clear> [player]
