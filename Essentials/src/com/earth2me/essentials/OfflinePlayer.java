@@ -1415,6 +1415,11 @@ public class OfflinePlayer implements Player {
     }
 
     @Override
+    public void sendTitle(String title, String subtitle, int int1, int int2, int int3) {
+        
+    }
+
+    @Override
     public AttributeInstance getAttribute(Attribute attribute) {
         // GetAttribute is nullable as per CraftAttributeMap. This might need to be
         // improved to support cases where dummy null instances should be returned.
