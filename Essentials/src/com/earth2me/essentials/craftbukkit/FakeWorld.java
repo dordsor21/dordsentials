@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import org.bukkit.util.Consumer;
 
 
 public class FakeWorld implements World {
@@ -340,7 +339,7 @@ public class FakeWorld implements World {
     }
 
     @Override
-    public <T extends Entity> T spawn(Location lctn, Class<T> type, Consumer<T> consumer) throws IllegalArgumentException {
+    public <T extends Entity> T spawn(Location location, Class<T> aClass, org.bukkit.util.Consumer<T> consumer) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -601,7 +600,7 @@ public class FakeWorld implements World {
 
     @Override
     public void playSound(Location location, Sound sound, SoundCategory soundCategory, float v, float v1) {
-        
+
     }
 
     @Override

@@ -1415,7 +1415,7 @@ public class OfflinePlayer implements Player {
     }
 
     @Override
-    public void sendTitle(String title, String subtitle, int int1, int int2, int int3) {
+    public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         
     }
 

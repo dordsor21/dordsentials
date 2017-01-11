@@ -28,7 +28,9 @@ import org.bukkit.potion.PotionEffectType;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +59,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private boolean ignoreMsg = false;
     private String afkMessage;
     private long afkSince;
+    private Map<User, BigDecimal> confirmingPayments = new WeakHashMap<>();
 
     public User(final Player base, final IEssentials ess) {
         super(base, ess);
@@ -303,12 +306,12 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
         if (ess.getSettings().addPrefixSuffix()) {
             //These two extra toggles are not documented, because they are mostly redundant #EasterEgg
-            if (withPrefix || !ess.getSettings().disablePrefix()) {
+            if (withPrefix && !ess.getSettings().disablePrefix()) {
                 final String ptext = ess.getPermissionsHandler().getPrefix(base).replace('&', '§');
                 prefix.insert(0, ptext);
                 suffix = "§r";
             }
-            if (withSuffix || !ess.getSettings().disableSuffix()) {
+            if (withSuffix && !ess.getSettings().disableSuffix()) {
                 final String stext = ess.getPermissionsHandler().getSuffix(base).replace('&', '§');
                 suffix = stext + "§r";
                 suffix = suffix.replace("§f§f", "§f").replace("§f§r", "§r").replace("§r§r", "§r");
@@ -834,6 +837,11 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     @Override
     public long getAfkSince() {
         return afkSince;
+    }
+
+    @Override
+    public Map<User, BigDecimal> getConfirmingPayments() {
+        return confirmingPayments;
     }
 
     /**

@@ -90,6 +90,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
         lastAccountName = _getLastAccountName();
         commandCooldowns = _getCommandCooldowns();
         acceptingPay = _getAcceptingPay();
+        confirmPay = _getConfirmPay();
     }
 
     private BigDecimal money;
@@ -896,6 +897,22 @@ public abstract class UserData extends PlayerExtension implements IConf {
         save();
     }
 
+    private boolean confirmPay = true; // players accept pay by default
+
+    public boolean _getConfirmPay() {
+        return config.getBoolean("confirm-pay", true);
+    }
+
+    public boolean isPromptingPayConfirm() {
+        return confirmPay;
+    }
+
+    public void setPromptingPayConfirm(boolean prompt) {
+        this.confirmPay = prompt;
+        config.setProperty("confirm-pay", prompt);
+        save();
+    }
+
     public UUID getConfigUUID() {
         return config.uuid;
     }
@@ -910,5 +927,9 @@ public abstract class UserData extends PlayerExtension implements IConf {
 
     public void stopTransaction() {
         config.stopTransaction();
+    }
+
+    public EssentialsUserConf getConfig() {
+        return config;
     }
 }
