@@ -40,6 +40,9 @@
 /out
 .idea/
 *.iml
+*.classpath
+*.project
+*.settings/
 target/
 dependency-reduced-pom.xml
 /Essentials/config.yml
@@ -47,12 +50,15 @@ dependency-reduced-pom.xml
 /Essentials/usermap.csv
 /Essentials/userdata
 /EssentialsGroupManager/target/
+Essentials/src/com/earth2me/essentials/commands/Commandback.java
 Essentials/src/com/earth2me/essentials/commands/Commandmsg.java
 Essentials/src/com/earth2me/essentials/commands/Commandmsgtoggle.java
 Essentials/src/com/earth2me/essentials/commands/Commandr.java
+Essentials/src/com/earth2me/essentials/commands/Commandspeed.java
 Essentials/src/com/earth2me/essentials/commands/Commandtp.java
 Essentials/src/com/earth2me/essentials/commands/Commandtpa.java
 Essentials/src/com/earth2me/essentials/commands/Commandtpaall.java
+Essentials/src/com/earth2me/essentials/commands/Commandtpacancel.java
 Essentials/src/com/earth2me/essentials/commands/Commandtpaccept.java
 Essentials/src/com/earth2me/essentials/commands/Commandtpahere.java
 Essentials/src/com/earth2me/essentials/commands/Commandtpall.java
