@@ -79,10 +79,6 @@ commands:
     description: Removes a jail.
     usage: /<command> <jailname>
     aliases: [edeljail,remjail,eremjail,rmjail,ermjail]
-  delwarp:
-    description: Deletes the specified warp.
-    usage: /<command> <warp>
-    aliases: [edelwarp,remwarp,eremwarp,rmwarp,ermwarp]
   depth:
     description: States current depth, relative to sea level.
     usage: /depth
@@ -191,10 +187,6 @@ commands:
     description: List all jails.
     usage: /<command>
     aliases: [ejails]
-  kick:
-    description: Kicks a specified player with a reason.
-    usage: /<command> <player> [reason]
-    aliases: [ekick]
   kickall:
     description: Kicks all players off the server except the issuer.
     usage: /<command> [reason]
@@ -323,10 +315,6 @@ commands:
     description: Creates a jail where you specified named [jailname].
     usage: /<command> <jailname>
     aliases: [esetjail,createjail,ecreatejail]
-  setwarp:
-    description: Creates a new warp.
-    usage: /<command> <warp>
-    aliases: [createwarp,ecreatewarp,esetwarp]
   setworth:
     description: Set the sell value of an item.
     usage: /<command> [itemname|id] <price>
@@ -387,14 +375,6 @@ commands:
     description: Allows the unlimited placing of items.
     usage: /<command> <list|item|clear> [player]
     aliases: [eunlimited,ul,unl,eul,eunl]
-  vanish:
-    description: Hide yourself from other players.
-    usage: /<command> [player] [on|off]
-    aliases: [v,ev,evanish]
-  warp:
-    description: List all warps or warp to the specified location.
-    usage: /<command> <pagenumber|warp> [player]
-    aliases: [ewarp,warps,ewarps]
   weather:
     description: Sets the weather.
     usage: /<command> <storm/sun> [duration]
