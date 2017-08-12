@@ -276,7 +276,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         confList.add(pluginListener);
 
         final EssentialsPlayerListener playerListener = new EssentialsPlayerListener(this);
-        pm.registerEvents(playerListener, this);
+        playerListener.registerEvents();
 
         final EssentialsBlockListener blockListener = new EssentialsBlockListener(this);
         pm.registerEvents(blockListener, this);
@@ -462,10 +462,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
             // New mail notification
             if (user != null && !getSettings().isCommandDisabled("mail") && !command.getName().equals("mail") && user.isAuthorized("essentials.mail")) {
-                final List<String> mail = user.getMails();
-                if (mail != null && !mail.isEmpty()) {
-                    user.sendMessage(tl("youHaveNewMail", mail.size()));
-                }
+                user.notifyOfMail();
             }
 
             //Print version even if admin command is not available #easteregg
@@ -670,6 +667,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private void handleCrash(Throwable exception) {
         final PluginManager pm = getServer().getPluginManager();
         LOGGER.log(Level.SEVERE, exception.toString());
+        exception.printStackTrace();
         pm.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.LOW)
             public void onPlayerJoin(final PlayerJoinEvent event) {
