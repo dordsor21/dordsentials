@@ -13,6 +13,8 @@
 
 # If you have problems join the Essentials help support channel: http://tiny.cc/EssentialsChat
 
+# Version ${project.version}-b${build.number}
+
 ############################################################
 # +------------------------------------------------------+ #
 # |                 Essentials (Global)                  | #
@@ -628,7 +630,7 @@ economy-log-enabled: false
 # This is useful if you want superperms-based permissions (with wildcards) for custom permissions plugins.
 # If you wish to use EssentialsX' built-in permissions using the `player-commands` section above, set this to false.
 # Default is true. 
-use-bukkit-permissions: false
+use-bukkit-permissions: true
 
 # Minimum acceptable amount to be used in /pay.
 minimum-pay-amount: 0.001
@@ -879,10 +881,17 @@ newbies:
   #kit: ''
   kit: tools
 
+# What priority should we use for handling respawns?
+# Set this to none, if you want vanilla respawning behaviour.
 # Set this to lowest, if you want Multiverse to handle the respawning.
 # Set this to high, if you want EssentialsSpawn to handle the respawning.
 # Set this to highest, if you want to force EssentialsSpawn to handle the respawning.
 respawn-listener-priority: high
+
+# What priority should we use for handling spawning on joining the server?
+# See respawn-listener-priority for possible values.
+# Note: changing this may impact or break spawn-on-join functionality.
+spawn-join-listener-priority: high
 
 # When users die, should they respawn at their first home or bed, instead of the spawnpoint?
 respawn-at-home: false

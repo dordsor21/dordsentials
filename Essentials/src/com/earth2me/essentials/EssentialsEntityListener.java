@@ -77,7 +77,9 @@ public class EssentialsEntityListener implements Listener {
             event.setCancelled(true);
         }
 
-        onPlayerVsPlayerPowertool(event, defender, attacker);
+        if (attacker.arePowerToolsEnabled()) {
+            onPlayerVsPlayerPowertool(event, defender, attacker);
+        }
     }
 
     private void onPlayerVsPlayerPowertool(final EntityDamageByEntityEvent event, final Player defender, final User attacker) {
@@ -117,6 +119,22 @@ public class EssentialsEntityListener implements Listener {
     public void onEntityCombust(final EntityCombustEvent event) {
         if (event.getEntity() instanceof Player && ess.getUser((Player) event.getEntity()).isGodModeEnabled()) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEntityCombustByEntity(final EntityCombustByEntityEvent event) {
+        if (event.getCombuster() instanceof Arrow) {
+            Arrow combuster = (Arrow) event.getCombuster();
+            if (combuster.getShooter() instanceof Player) {
+                final User srcCombuster = ess.getUser(((Player) combuster.getShooter()).getUniqueId());
+                if (srcCombuster.isGodModeEnabled() && !srcCombuster.isAuthorized("essentials.god.pvp")) {
+                    event.setCancelled(true);
+                }
+                if (srcCombuster.isHidden() && !srcCombuster.isAuthorized("essentials.vanish.pvp")) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
