@@ -428,7 +428,7 @@ cancel-afk-on-move: true
 # Set the player's list name when they are AFK. This is none by default which specifies that Essentials 
 # should not interfere with the AFK player's list name.
 # You may use color codes, use {USERNAME} the player's name or {PLAYER} for the player's displayname.
-afk-list-name: none
+afk-list-name: "none"
 
 # You can disable the death messages of Minecraft here.
 death-messages: true
@@ -635,7 +635,7 @@ use-bukkit-permissions: true
 # Minimum acceptable amount to be used in /pay.
 minimum-pay-amount: 0.001
 
-# The format of currency, excluding symbols. See currency-sumbol-format-locale for symbol configuration.
+# The format of currency, excluding symbols. See currency-symbol-format-locale for symbol configuration.
 #
 # "#,##0.00" is how the majority of countries display currency.
 #currency-format: "#,##0.00"

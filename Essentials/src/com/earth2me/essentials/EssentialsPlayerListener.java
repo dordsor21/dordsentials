@@ -363,7 +363,13 @@ public class EssentialsPlayerListener implements Listener {
             case KICK_BANNED:
                 BanEntry banEntry = ess.getServer().getBanList(BanList.Type.NAME).getBanEntry(event.getPlayer().getName());
                 if (banEntry != null) {
-                    event.setKickMessage(tl("banJoin", banEntry.getReason()));
+                    Date banExpiry = banEntry.getExpiration();
+                    if (banExpiry != null) {
+                        String expiry = DateUtil.formatDateDiff(banExpiry.getTime());
+                        event.setKickMessage(tl("tempbanJoin", expiry, banEntry.getReason()));
+                    } else {
+                        event.setKickMessage(tl("banJoin", banEntry.getReason()));
+                    }
                 } else {
                     banEntry = ess.getServer().getBanList(BanList.Type.IP).getBanEntry(event.getAddress().getHostAddress());
                     if (banEntry != null) {
@@ -590,21 +596,19 @@ public class EssentialsPlayerListener implements Listener {
                     final User user = ess.getUser(event.getPlayer());
                     if (user.isFlyClickJump()) {
                         useFlyClickJump(user);
-                        return;
+                        break;
                     }
                 }
             case LEFT_CLICK_BLOCK:
                 if (event.getItem() != null && event.getItem().getType() != Material.AIR) {
                     final User user = ess.getUser(event.getPlayer());
-                    user.updateActivity(true);
                     if (user.hasPowerTools() && user.arePowerToolsEnabled() && usePowertools(user, event.getItem().getTypeId())) {
                         event.setCancelled(true);
                     }
                 }
                 break;
-            default:
-                break;
         }
+        ess.getUser(event.getPlayer()).updateActivity(true);
     }
 
     // This method allows the /jump lock feature to work, allows teleporting while flying #EasterEgg
