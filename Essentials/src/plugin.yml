@@ -2,7 +2,7 @@
 name: Essentials
 main: com.earth2me.essentials.Essentials
 # Note to developers: This next line cannot change, or the automatic versioning system will break.
-version: ${project.version}-b${build.number}
+version: ${full.version}
 website: http://tiny.cc/EssentialsCommands
 description: Provides an essential, core set of commands for Bukkit.
 softdepend: [Vault]
@@ -423,3 +423,8 @@ permissions:
       essentials.gamemode: true
       essentials.gamemode.others: true
       essentials.gamemode.all: true
+  essentials.seen.extra:
+    default: op
+    children:
+      essentials.seen.ip: true
+      essentials.seen.location: true
