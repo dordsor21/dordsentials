@@ -235,10 +235,6 @@ commands:
     description: Views the Message Of The Day.
     usage: /<command> [chapter] [page]
     aliases: [emotd]
-  mute:
-    description: Mutes or unmutes a player.
-    usage: /<command> <player> [datediff]
-    aliases: [emute,silence,esilence]
   near:
     description: Lists the players near by or around a player.
     usage: /<command> [playername] [radius]
