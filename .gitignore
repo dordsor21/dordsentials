@@ -72,7 +72,6 @@ Essentials/src/com/earth2me/essentials/commands/Commandtpaall.java
 Essentials/src/com/earth2me/essentials/commands/Commandtpa.java
 Essentials/src/com/earth2me/essentials/commands/Commandtp.java
 Essentials/src/com/earth2me/essentials/commands/Commandtempban.java
-Essentials/src/com/earth2me/essentials/commands/Commandspeed.java
 Essentials/src/com/earth2me/essentials/commands/Commandsetwarp.java
 Essentials/src/com/earth2me/essentials/commands/Commandr.java
 Essentials/src/com/earth2me/essentials/commands/Commandmute.java
