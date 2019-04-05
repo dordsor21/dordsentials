@@ -133,6 +133,10 @@ public class OfflinePlayer implements Player {
         return world;
     }
 
+    @Override public void setRotation(float v, float v1) {
+
+    }
+
     public void setLocation(Location loc) {
         location = loc;
         world = loc.getWorld();
