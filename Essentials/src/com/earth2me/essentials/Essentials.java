@@ -18,6 +18,9 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.*;
+import com.earth2me.essentials.items.AbstractItemDb;
+import com.earth2me.essentials.items.FlatItemDb;
+import com.earth2me.essentials.items.LegacyItemDb;
 import com.earth2me.essentials.metrics.Metrics;
 import com.earth2me.essentials.perm.PermissionsHandler;
 import com.earth2me.essentials.register.payment.Methods;
@@ -28,6 +31,7 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
+import com.earth2me.essentials.utils.VersionUtil;
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
@@ -37,17 +41,17 @@ import net.ess3.api.ISettings;
 import net.ess3.nms.PotionMetaProvider;
 import net.ess3.nms.SpawnEggProvider;
 import net.ess3.nms.SpawnerProvider;
+import net.ess3.nms.flattened.FlatSpawnEggProvider;
 import net.ess3.nms.legacy.LegacyPotionMetaProvider;
+import net.ess3.nms.legacy.LegacySpawnEggProvider;
+import net.ess3.nms.legacy.LegacySpawnerProvider;
 import net.ess3.nms.refl.ReflSpawnEggProvider;
 import net.ess3.nms.updatedmeta.BasePotionDataProvider;
 import net.ess3.nms.updatedmeta.BlockMetaSpawnerProvider;
-import net.ess3.nms.legacy.LegacySpawnEggProvider;
-import net.ess3.nms.legacy.LegacySpawnerProvider;
 import net.ess3.nms.v1_8_R1.v1_8_R1SpawnerProvider;
 import net.ess3.nms.v1_8_R2.v1_8_R2SpawnerProvider;
 import net.ess3.providers.ProviderFactory;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -92,7 +96,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient Worth worth;
     private transient List<IConf> confList;
     private transient Backup backup;
-    private transient ItemDb itemDb;
+    private transient AbstractItemDb itemDb;
     private transient final Methods paymentMethod = new Methods();
     private transient PermissionsHandler permissionsHandler;
     private transient AlternativeCommandsHandler alternativeCommandsHandler;
@@ -168,6 +172,10 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             
             Console.setInstance(this);
 
+            if (!VersionUtil.isServerSupported()) {
+                getLogger().severe(tl("serverUnsupported"));
+            }
+
             final PluginManager pm = getServer().getPluginManager();
             for (Plugin plugin : pm.getPlugins()) {
                 if (plugin.getDescription().getName().startsWith("Essentials") && !plugin.getDescription().getVersion().equals(this.getDescription().getVersion()) && !plugin.getDescription().getName().equals("EssentialsAntiCheat")) {
@@ -188,29 +196,38 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 final EssentialsUpgrade upgrade = new EssentialsUpgrade(this);
                 upgrade.beforeSettings();
                 execTimer.mark("Upgrade");
+
                 confList = new ArrayList<>();
                 settings = new Settings(this);
                 confList.add(settings);
                 execTimer.mark("Settings");
+
                 userMap = new UserMap(this);
                 confList.add(userMap);
                 execTimer.mark("Init(Usermap)");
+
                 kits = new Kits(this);
                 confList.add(kits);
                 upgrade.convertKits();
                 execTimer.mark("Kits");
+
                 upgrade.afterSettings();
                 execTimer.mark("Upgrade2");
+
                 warps = new Warps(getServer(), this.getDataFolder());
                 confList.add(warps);
                 execTimer.mark("Init(Spawn/Warp)");
+
                 worth = new Worth(this.getDataFolder());
                 confList.add(worth);
-                itemDb = new ItemDb(this);
+                itemDb = getItemDbFromConfig();
                 confList.add(itemDb);
                 execTimer.mark("Init(Worth/ItemDB)");
+
                 jails = new Jails(this);
                 confList.add(jails);
+                execTimer.mark("Init(Jails)");
+
                 spawnerProvider = new ProviderFactory<>(getLogger(),
                         Arrays.asList(
                                 BlockMetaSpawnerProvider.class,
@@ -220,6 +237,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                         ), "mob spawner").getProvider();
                 spawnEggProvider = new ProviderFactory<>(getLogger(),
                         Arrays.asList(
+                                FlatSpawnEggProvider.class,
                                 ReflSpawnEggProvider.class,
                                 LegacySpawnEggProvider.class
                         ), "spawn egg").getProvider();
@@ -228,7 +246,12 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                                 BasePotionDataProvider.class,
                                 LegacyPotionMetaProvider.class
                         ), "potion meta").getProvider();
+                execTimer.mark("Init(Providers)");
                 reload();
+
+                // The item spawn blacklist is loaded with all other settings, before the item
+                // DB, but it depends on the item DB, so we need to reload it again here:
+                ((Settings) settings)._lateLoadItemSpawnBlacklist();
             } catch (YAMLException exception) {
                 if (pm.getPlugin("EssentialsUpdate") != null) {
                     LOGGER.log(Level.SEVERE, tl("essentialsHelp2"));
@@ -252,7 +275,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 addDefaultBackPermissionsToWorld(w);
 
             metrics = new Metrics(this);
-            if (!metrics.isOptOut()) {
+            if (metrics.isEnabled()) {
                 getLogger().info("Starting Metrics. Opt-out using the global bStats config.");
             } else {
                 getLogger().info("Metrics disabled per bStats config.");
@@ -918,6 +941,24 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         @Override
         public void run() {
             ess.reload();
+        }
+    }
+
+    private AbstractItemDb getItemDbFromConfig() {
+        final String setting = settings.getItemDbType();
+
+        if (setting.equalsIgnoreCase("json")) {
+            return new FlatItemDb(this);
+        } else if (setting.equalsIgnoreCase("csv")) {
+            return new LegacyItemDb(this);
+        } else {
+            VersionUtil.BukkitVersion version = VersionUtil.getServerBukkitVersion();
+
+            if (version.isHigherThanOrEqualTo(VersionUtil.v1_13_0_R01)) {
+                return new FlatItemDb(this);
+            } else {
+                return new LegacyItemDb(this);
+            }
         }
     }
 }
