@@ -39,6 +39,10 @@
 
     <modules>
         <module>Essentials</module>
+        <module>EssentialsAntiBuild</module>
+        <module>EssentialsChat</module>
+        <module>EssentialsGeoIP</module>
+        <module>EssentialsProtect</module>
         <module>EssentialsSpawn</module>
         <module>EssentialsXMPP</module>
         <module>nms/NMSProvider</module>
@@ -90,6 +94,26 @@
                         <artifactItem>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>EssentialsX</artifactId>
+                            <version>${project.version}</version>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>EssentialsXAntiBuild</artifactId>
+                            <version>${project.version}</version>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>EssentialsXChat</artifactId>
+                            <version>${project.version}</version>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>EssentialsXGeoIP</artifactId>
+                            <version>${project.version}</version>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>EssentialsXProtect</artifactId>
                             <version>${project.version}</version>
                         </artifactItem>
                         <artifactItem>
