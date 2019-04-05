@@ -28,7 +28,9 @@
                 </executions>
                 <configuration>
                     <artifactSet>
-                        <includes>net.ess3:EssentialsXSpawn</includes>
+                        <includes>
+                            <include>net.ess3:EssentialsXSpawn</include>
+                        </includes>
                     </artifactSet>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>
